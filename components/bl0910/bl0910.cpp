@@ -2,9 +2,9 @@
 #include "esphome/core/log.h"
 
 namespace esphome {
-namespace BL0910 {
+namespace bl0910 {
 
-static const char *const TAG = "BL0910";
+static const char *const TAG = "bl0910";
 uint8_t USR_WRPROT_Witable[6]={0xCA, 0x9E, 0x55, 0x55, 0x00, 0xB7};  //用户寄存器可操作指令
 uint8_t USR_WRPROT_Onlyread[6]={0xCA, 0x9E, 0x00, 0x00, 0x00, 0x61};  //用户寄存器只读指令
 
@@ -166,7 +166,7 @@ void BL0910::update() {
 }
 
   //校验和。SUM 字节为（Addr+Data_L+Data_M+Data_H）&0xFF 取反
-uint8_t BL0910_checksum(const uint8_t address, const DataPacket *data) {
+uint8_t bl0910_checksum(const uint8_t address, const DataPacket *data) {
   return (address + data->l + data->m + data->h) ^ 0xFF; 
 }
   
@@ -181,7 +181,7 @@ void BL0910::read_data(const uint8_t address, const float reference, sensor::Sen
     this-> write_byte(BL0910_READ_COMMAND);
     this-> write_byte(address);
     if (this-> read_array((uint8_t *) &buffer, sizeof(buffer)-1))  {      
-      if (BL0910_checksum(address,&buffer)==buffer.checksum) {
+      if (bl0910_checksum(address,&buffer)==buffer.checksum) {
         data_s24.l = buffer.l;
         data_s24.m = buffer.m;
         data_s24.h = buffer.h;
@@ -202,7 +202,7 @@ void BL0910::read_data(const uint8_t address, const float reference, sensor::Sen
     this-> write_byte(address);
     if (this-> read_array((uint8_t *) &buffer, sizeof(buffer)-1))  {    
     //ESP_LOGW(TAG, "checksum= 0x%02X", BL0910_checksum(BL0910_V_RMS,&buffer));      
-      if (BL0910_checksum(address,&buffer)==buffer.checksum) {
+      if (bl0910_checksum(address,&buffer)==buffer.checksum) {
         data_u24.l = buffer.l;
         data_u24.m = buffer.m;
         data_u24.h = buffer.h;
@@ -222,7 +222,7 @@ void BL0910::read_data(const uint8_t address, const float reference, sensor::Sen
     this-> write_byte(BL0910_READ_COMMAND);
     this-> write_byte(address);
     if (this-> read_array((uint8_t *) &buffer, sizeof(buffer)-1))  {    
-      if (BL0910_checksum(address,&buffer)==buffer.checksum) {
+      if (bl0910_checksum(address,&buffer)==buffer.checksum) {
         data_u24.l = buffer.l;
         data_u24.m = buffer.m;
         data_u24.h = buffer.h;
@@ -242,7 +242,7 @@ void BL0910::read_data(const uint8_t address, const float reference, sensor::Sen
     this-> write_byte(BL0910_READ_COMMAND);
     this-> write_byte(address);
     if (this-> read_array((uint8_t *) &buffer, sizeof(buffer)-1))  {    
-      if (BL0910_checksum(address,&buffer)==buffer.checksum) {
+      if (bl0910_checksum(address,&buffer)==buffer.checksum) {
         data_s24.l = buffer.l;
         data_s24.m = buffer.m;
         data_s24.h = buffer.h;
@@ -271,7 +271,7 @@ void BL0910::Bias_correction(const uint8_t address, const float measurements, co
   if (value < 0) {
     data.h = (value << 8 >>24)|0b10000000;    
   }  
-  data.address = BL0910_checksum(address, &data);
+  data.address = bl0910_checksum(address, &data);
   ESP_LOGW(TAG, "RMSOS:%02X%02X%02X%02X%02X%02X",BL0910_WRITE_COMMAND,address,data.l ,data.m, data.h,data.address );
   this-> write_byte(BL0910_WRITE_COMMAND);
   this-> write_byte(address);
@@ -295,7 +295,7 @@ void BL0910::gain_correction(const uint8_t address, const float measurements, co
   data.h = 0xFF;
   data.m = value >> 8;
   data.l = value << 8 >>8;  
-  data.address = BL0910_checksum(address, &data);
+  data.address = bl0910_checksum(address, &data);
   //ESP_LOGW(TAG, "RMSOS:%02X%02X%02X%02X%02X%02X",BL0910_WRITE_COMMAND,address,data.l ,data.m, data.h,data.address );
   this-> write_byte(BL0910_WRITE_COMMAND);
   this-> write_byte(address);
