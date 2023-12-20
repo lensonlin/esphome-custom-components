@@ -11,26 +11,26 @@ DEPENDENCIES = ["uart"]
 AUTO_LOAD = ["bl0910"]
 
 bl0910_ns = cg.esphome_ns.namespace("bl0910")
-bl0910 = bl0910_ns.class_(
-    "bl0910", cg.PollingComponent, uart.UARTDevice
+BL0910 = bl0910_ns.class_(
+    "BL0910", cg.PollingComponent, uart.UARTDevice
 )
 
 CONFIG_SCHEMA = (
     cv.Schema(
         {
-            cv.GenerateID(): cv.declare_id(bl0910),
+            cv.GenerateID(): cv.declare_id(BL0910),
             cv.Optional("Frequency"): sensor.sensor_schema(
             accuracy_decimals = 0,
             device_class = "frequency",
             unit_of_measurement = "Hz"  
             ),
-            cv.GenerateID(): cv.declare_id(bl0910),
+            cv.GenerateID(): cv.declare_id(BL0910),
             cv.Optional("Temperature"): sensor.sensor_schema(
             accuracy_decimals = 0,
             device_class = "temperature",
             unit_of_measurement = "℃"  
             ),
-            cv.GenerateID(): cv.declare_id(bl0910),
+            cv.GenerateID(): cv.declare_id(BL0910),
             cv.Optional("Voltage"): sensor.sensor_schema(
             accuracy_decimals = 0,
             device_class = "voltage",
