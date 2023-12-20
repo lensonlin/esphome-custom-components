@@ -5,10 +5,10 @@
 #include "esphome/components/sensor/sensor.h"
 
 namespace esphome {
-namespace BL0910 {
+namespace bl0910 {
 
 // 硬件资料
-// https://www.belling.com.cn/media/file_object/bel_product/BL0910/guide/BL0910%20APP%20Note_V1.02.pdf
+// https://www.belling.com.cn/media/file_object/bel_product/BL0910/datasheet/BL0910%20APP%20Note_V1.02.pdf
 // https://www.belling.com.cn/media/file_object/bel_product/BL0910/datasheet/BL0910_V1.02_cn.pdf
 static const float BL0910_FREF = 10000000;//频率转换
 static const float BL0910_TREF = 12.5/59-40;//温度转换 内部温度=（TPS-64）*12.5/59-40 （℃）
@@ -146,6 +146,5 @@ class BL0910 : public PollingComponent, public uart::UARTDevice {
   void received_package_(const DataPacket *data) const;
   
 };
-}  // namespace BL0910
+}  // namespace bl0910
 }  // namespace esphome
-
